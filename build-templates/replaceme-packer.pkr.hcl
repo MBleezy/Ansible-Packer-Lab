@@ -100,7 +100,7 @@ source "azure-arm" "packer" {
   skip_create_image = var.skip_create_image
   shared_image_gallery_destination {
     subscription        = "${var.subscription_id}"
-    gallery_name        = "VDI_SIG"
+    gallery_name        = "mb_gallery"
     image_name          = "W10_AVD"
     replication_regions = ["eastus"]
     resource_group      = "packer"
