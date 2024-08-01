@@ -1,0 +1,64 @@
+- name: Copy Borland files
+  ansible.windows.win_copy:
+    src: '\\my.azure.blob.storage.net\installmedia\BDE\Borland'
+    dest: C:\Program Files (x86)\
+    remote_src: true
+  vars:
+    ansible_become: yes
+    ansible_become_method: runas
+    ansible_become_user: "{{ ansible_user }}"
+    ansible_become_pass: "{{ ansible_password }}"
+
+
+- name: Copy Borland DLL files to system32
+  ansible.windows.win_copy:
+    src: "\\\\my.azure.blob.storage.net\\installmedia\\BDE\\{{ item }}"
+    dest: C:\Windows\System32\
+    remote_src: true
+  loop:
+    - borlndmm.dll
+    - mfc71.dll
+    - MFC71ENU.DLL
+    - mfc71u.dll
+    - msvcr71.dll
+    - msxml4.dll
+    - msxml4r.dll
+    - ntwdblib.dll
+    - osql.exe
+  vars:
+    ansible_become: yes
+    ansible_become_method: runas
+    ansible_become_user: "{{ ansible_user }}"
+    ansible_become_pass: "{{ ansible_password }}"
+
+
+- name: Copy Borland DLL files to sysWOW64
+  ansible.windows.win_copy:
+    src: "\\\\my.azure.blob.storage.net\\installmedia\\BDE\\{{ item }}"
+    dest: C:\Windows\SysWOW64\
+    remote_src: true
+  loop:
+    - borlndmm.dll
+    - mfc71.dll
+    - MFC71ENU.DLL
+    - mfc71u.dll
+    - msvcr71.dll
+    - msxml4.dll
+    - msxml4r.dll
+    - ntwdblib.dll
+    - rexInquiry.dll
+    - osql.exe
+  vars:
+    ansible_become: yes
+    ansible_become_method: runas
+    ansible_become_user: "{{ ansible_user }}"
+    ansible_become_pass: "{{ ansible_password }}"
+
+- name: Copy BDE.reg to target machine
+  ansible.windows.win_copy:
+    src: BDE.reg
+    dest: C:\temp\BDE.reg
+
+- name: Merge BDE Registry File
+  community.windows.win_regmerge:
+    path: C:\temp\BDE.reg

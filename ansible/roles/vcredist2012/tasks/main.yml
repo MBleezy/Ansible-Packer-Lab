@@ -1,0 +1,5 @@
+---
+- name: Install Microsoft Visual C++ 2012 11.0.61031.20230518
+  win_chocolatey:
+    name: vcredist2012
+    state: present

@@ -1,1 +1,2 @@
-# Ansible-Packer-Lab
+# Packer/Ansible Template
+Additional info at -. This template is designed to be used in tandem with this documentation, walking you through what needs to be created, changed, removed and tweaked to function at any functionally any client.

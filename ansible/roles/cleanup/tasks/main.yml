@@ -1,0 +1,41 @@
+---
+# Used to place icon on the desktop, leaving task as an example or future use
+# - name: Create an shortcut on the Desktop
+#   community.windows.win_shortcut:
+#     src: C:\ProgramData\Microsoft\Windows\Start Menu\Programs\eVoWPF\eVoWPF
+#     dest: C:\Users\Public\Desktop\eVoWPF.lnk
+#     icon: C:\ProgramData\Microsoft\Windows\Start Menu\Programs\eVoWPF\eVoWPF,0
+
+# Used for previous client, leaving task as an example or possible future use    
+#- name: Download Start Menu Customization
+#  ansible.windows.win_get_url:
+#    url: https://my.azure.blob.storage/LayoutModification.xml
+#    dest: C:\temp\
+
+# Used for previous client, leaving task as an example or possible future use    
+# - name: Import Custom Start Menu
+#   ansible.windows.win_powershell:
+#     script: |
+#       Import-StartLayout -LayoutPath C:\temp\LayoutModification.xml -MountPath $env:SystemDrive\
+
+- name: Hide Shutdown
+  ansible.windows.win_regedit:
+    path: HKLM:\SOFTWARE\Microsoft\PolicyManager\default\Start\HideShutDown
+    name: value
+    data: 1
+    type: dword
+
+- name: Set pagefile for drive C to automatic
+  community.windows.win_pagefile:
+    drive: C
+    automatic: yes
+
+- name: Install all Windows updates and reboot as many times as needed
+  ansible.windows.win_updates:
+    category_names: '*'
+    reboot: true
+
+- name: Delete C:\temp folder
+  ansible.windows.win_file:
+    path: C:\temp
+    state: absent

@@ -1,0 +1,5 @@
+---
+- name: Install Microsoft Visual C++ 2013 12.0.40660.20180427
+  win_chocolatey:
+    name: vcredist2013
+    state: present

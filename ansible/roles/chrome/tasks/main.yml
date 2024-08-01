@@ -1,0 +1,7 @@
+---
+- name: Install Chrome
+  win_chocolatey:
+    name: googlechrome
+    state: present
+    choco_args:
+    - --ignore-checksums

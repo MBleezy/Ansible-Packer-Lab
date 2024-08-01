@@ -1,0 +1,11 @@
+- name: Install SSMS
+  ansible.windows.win_package:
+    path: '\\my.azure.blob.storage.net\installmedia\SSMS\SSMS-Setup-ENU.exe'
+    state: present
+    arguments:
+    - /quiet
+  vars:
+    ansible_become: yes
+    ansible_become_method: runas
+    ansible_become_user: "{{ ansible_user }}"
+    ansible_become_pass: "{{ ansible_password }}"

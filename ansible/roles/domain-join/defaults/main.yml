@@ -1,0 +1,3 @@
+domain_name: replaceme-domain_name
+hostname: replaceme-hostname
+domain_ou_path: OU=replaceme-OU,DC=replaceme,DC=replaceme,DC=replaceme

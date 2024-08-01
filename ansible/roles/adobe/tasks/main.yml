@@ -1,0 +1,43 @@
+---
+#If you'd like to install the basic (free) version of Adobe, the below choco task is an option.
+#- name: Install Adobe Reader DC
+#  win_chocolatey:
+#    name: adobereader
+#    state: present
+- name: Make sure extract directory exist
+  ansible.windows.win_file:
+    path: C:\temp\adobe
+    state: directory
+
+- name: Download Acrobat_DC_Web_x64_WWMUI.zip
+  ansible.windows.win_get_url:
+    url: https://my.azure.blob.storage.net/cts-ansible/Acrobat_DC_Web_x64_WWMUI.zip
+    dest: C:\temp\adobe
+    
+- name: Unzip Acrobat_DC_Web_x64_WWMUI.zip to C:\temp\adobe
+  community.windows.win_unzip:
+    src: C:\temp\adobe\Acrobat_DC_Web_x64_WWMUI.zip
+    dest: C:\temp\adobe
+    remote_src: yes
+
+- name: Install Adobe
+  ansible.windows.win_package:
+    path: C:\temp\adobe\Adobe Acrobat\setup.exe
+    state: present
+    arguments:
+    - /install
+    - /passive
+    - /norestart
+    
+- name: Create Adobe Registry File from template
+  ansible.windows.win_template:
+    src: adobe.reg.j2
+    dest: C:\Temp\adobe\adobe.reg
+
+- name: Compare and Merge Adobe Registry Tweaks
+  community.windows.win_regmerge:
+    path: C:\Temp\adobe\adobe.reg
+    compare_to:
+      - HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Policies\Adobe\Adobe Acrobat\DC\FeatureLockDown
+      - HKEY_LOCAL_MACHINE\SOFTWARE\Adobe\Identity\UserSpecificIdentity
+      - HKEY_LOCAL_MACHINE\SOFTWARE\Adobe\Licensing\UserSpecificLicensing

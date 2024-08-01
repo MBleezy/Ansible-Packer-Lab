@@ -1,0 +1,29 @@
+# roles/defender/tasks/main.yml
+---
+- name: Make sure extract directory exist
+  ansible.windows.win_file:
+    path: C:\Scripts
+    state: directory
+
+- name: Download Onboard-NonPersistentMachine
+  ansible.windows.win_get_url:
+    url: https://my.azure.blob.storage.net/cts-ansible/Onboard-NonPersistentMachine.ps1
+    dest: C:\Scripts
+
+- name: Download WindowsDefenderATPOnboardingScript
+  ansible.windows.win_get_url:
+    url: https://my.azure.blob.storage.net/cts-ansible/WindowsDefenderATPOnboardingScript.cmd
+    dest: C:\Scripts
+
+- name: MDM Scheduled Task
+  community.windows.win_scheduled_task:
+    name: Add MDM Script as Scheduled Task
+    description: Runs MDM Script
+    actions:
+    - path: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe
+      arguments: -ExecutionPolicy Unrestricted -NonInteractive -File C:\Scripts\Onboard-NonPersistentMachine.ps1
+    triggers:
+    - type: boot
+    username: SYSTEM
+    run_level: highest
+    state: present

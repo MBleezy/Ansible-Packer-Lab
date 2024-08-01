@@ -1,0 +1,46 @@
+name: Packer Build
+
+# Trigger the workflow only on releases
+on:
+  release:
+    types: [published]
+
+jobs:
+  hcp-packer:
+    runs-on: self-hosted
+    name: Run Packer
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup `packer`
+        uses: hashicorp/setup-packer@main
+        id: setup
+        with:
+          version: "latest"
+
+      - name: Run `packer init`
+        id: init
+        run: packer init build-templates/replaceme-packer.pkr.hcl
+
+      - name: Run `packer validate`
+        id: validate
+        run: packer validate build-templates/replaceme-packer.pkr.hcl
+
+      - name: Build Image and Upload to SIG
+        run: |
+          IMAGE_VERSION=${{ github.event.release.tag_name }}
+          IMAGE_VERSION=${IMAGE_VERSION#v}
+
+          packer build -color=false -force \
+          -var 'git_commit_sha=${{ github.sha }}' \
+          -var 'github_source=${{ github.repository }}' \
+          -var "image_version=$IMAGE_VERSION" \
+          -var "skip_create_image=false" \
+          build-templates/replaceme-packer.pkr.hcl
+        env:
+          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.GH_Token }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}

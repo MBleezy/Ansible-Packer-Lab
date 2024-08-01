@@ -1,0 +1,5 @@
+---
+- name: Install Microsoft Visual C++ 2010 10.0.40219.32503
+  win_chocolatey:
+    name: vcredist2010
+    state: present

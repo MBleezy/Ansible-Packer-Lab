@@ -1,0 +1,85 @@
+- name: Install Crystal Reports 2020
+  ansible.windows.win_package:
+    path: '\\my.azure.blob.storage.net\installmedia\crystalreports\install\setup.exe'
+    state: present
+    arguments:
+    - -r
+    - \\my.azure.blob.storage.net\installmedia\crystalreports\install\response_full.ini
+  vars:
+    ansible_become: yes
+    ansible_become_method: runas
+    ansible_become_user: "{{ ansible_user }}"
+    ansible_become_pass: "{{ ansible_password }}"
+
+- name: Copy Crystal Update file
+  ansible.windows.win_copy:
+    src: '\\my.azure.blob.storage.net\installmedia\crystalreports\sp2u2'
+    dest: C:\temp
+    remote_src: true
+  vars:
+    ansible_become: yes
+    ansible_become_method: runas
+    ansible_become_user: "{{ ansible_user }}"
+    ansible_become_pass: "{{ ansible_password }}"
+
+- name: Install Crystal Reports 2020 SP2 Update2
+  ansible.windows.win_package:
+    path: 'C:\temp\sp2u2\setup.exe'
+    state: present
+    expected_return_code: [0, 1]
+    arguments:
+    - -r
+    - C:\temp\sp2u2\response_full.ini
+    
+- name: Copy DLL file to sysWOW64
+  ansible.windows.win_copy:
+    src: "\\\\my.azure.blob.storage.net\\installmedia\\BDE\\{{ item }}"
+    dest: C:\Windows\SysWOW64\
+    remote_src: true
+  loop:
+    - rexInquiry.dll
+  vars:
+    ansible_become: yes
+    ansible_become_method: runas
+    ansible_become_user: "{{ ansible_user }}"
+    ansible_become_pass: "{{ ansible_password }}"
+
+- name: Register dll
+  ansible.windows.win_command: regsvr32.exe /s C:\Windows\SysWOW64\rexInquiry.dll
+  vars:
+    ansible_become: yes
+    ansible_become_method: runas
+    ansible_become_user: "{{ ansible_user }}"
+    ansible_become_pass: "{{ ansible_password }}"
+
+- name: Copy IDAutomation_CrystalUFL
+  ansible.windows.win_copy:
+    src: '\\my.azure.blob.storage.net\installmedia\IDAutomation_CrystalUFL'
+    dest: C:\temp
+    remote_src: true
+  vars:
+    ansible_become: yes
+    ansible_become_method: runas
+    ansible_become_user: "{{ ansible_user }}"
+    ansible_become_pass: "{{ ansible_password }}"
+
+- name: Copy IDAutomation_USPS_IntelligentMailFontAdvantage
+  ansible.windows.win_copy:
+    src: '\\my.azure.blob.storage.net\installmedia\IDAutomation_USPS_IntelligentMailFontAdvantage'
+    dest: C:\temp
+    remote_src: true
+  vars:
+    ansible_become: yes
+    ansible_become_method: runas
+    ansible_become_user: "{{ ansible_user }}"
+    ansible_become_pass: "{{ ansible_password }}"
+
+- name: Install IDAutomation_CrystalUFL
+  ansible.windows.win_package:
+    path: C:\temp\IDAutomation_CrystalUFL\IDAutomation_CrystalUFL_sib.msi
+    state: present
+
+- name: Install IDAutomation_USPS_IntelligentMailFontAdvantage
+  ansible.windows.win_package:
+    path: C:\temp\IDAutomation_USPS_IntelligentMailFontAdvantage\IDAutomation_USPS_IntelligentMailFontAdvantage_sib.msi
+    state: present

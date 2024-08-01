@@ -1,0 +1,25 @@
+- name: Download CrowdStrike.zip
+  ansible.windows.win_copy:
+    src: '\\my.azure.blob.storage.net\installmedia\CrowdStrike.zip'
+    dest: C:\temp
+    remote_src: true
+  vars:
+    ansible_become: yes
+    ansible_become_method: runas
+    ansible_become_user: "{{ ansible_user }}"
+    ansible_become_pass: "{{ ansible_password }}"
+
+- name: Unzip CrowdStrike.zip to C:\temp\
+  community.windows.win_unzip:
+    src: C:\temp\CrowdStrike.zip
+    dest: C:\temp\CrowdStrike
+
+- name: Disable Windows Defender Real-Time Monitoring
+  ansible.windows.win_shell: |
+    Set-MpPreference -DisableRealtimeMonitoring $true
+
+- name: Install Crowdstrike
+  win_package:
+    path: 'C:\temp\CrowdStrike\WindowsSensor.MaverickGyr.exe'
+    state: present
+    arguments: '/install /norestart /quiet CID=### ProvToken=5B3FE736 GROUPING_TAGS="xxxx"'

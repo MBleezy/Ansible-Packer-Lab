@@ -1,0 +1,24 @@
+---
+- hosts: default
+  roles:
+    # - avd-base
+     - chocolatey
+    # - chrome
+    # - office
+    # - adobe
+    # - fslogix
+    # - defender
+    # - XDR
+    # - teams
+    # - vcredist2010
+    # - vcredist2012
+    # - vcredist2013
+    # - vcredist2015
+    # - crowdstrike
+    # - bde
+    # - ssms
+    # - crystal
+    # - crystalruntime2.0.3
+    # - crystalruntime2.4
+    # - VDA2308
+    # - cleanup
