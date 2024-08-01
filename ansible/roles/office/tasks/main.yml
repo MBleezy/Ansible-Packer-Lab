@@ -1,0 +1,21 @@
+---
+# tasks file for ansible-role-m365
+- name: Make sure extract directory exist
+  ansible.windows.win_file:
+    path: C:\temp\office
+    state: directory
+
+- name: Download setup.exe
+  ansible.windows.win_get_url:
+    url: https://my.azure.blob.storage.net/windows.net/cts-ansible/setup.exe
+    dest: C:\temp\office
+
+- name: Download configuration.xml
+  ansible.windows.win_get_url:
+    url: https://my.azure.blob.storage.net/cts-ansible/configuration.xml
+    dest: C:\temp\office
+
+- name: Install Office
+  ansible.windows.win_shell: C:\temp\office\setup.exe /configure C:\temp\office\configuration.xml
+  args:
+    executable: cmd.exe

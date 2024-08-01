@@ -1,0 +1,5 @@
+---
+- name: Install Microsoft Visual C++ 2015 14.0.24215.20170201
+  win_chocolatey:
+    name: vcredist2015
+    state: present

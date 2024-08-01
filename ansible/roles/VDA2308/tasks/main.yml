@@ -1,0 +1,24 @@
+# roles/citrix-vda/tasks/main.yml
+---
+- name: Install Citrix VDA (1/2)
+  ansible.windows.win_package:
+    path: '{{ citrix_vda_path }}'
+    arguments: '{{ citrix_vda_arguments }}'
+    expected_return_code: [0, 3, 3010]
+  register: vda_install
+
+- name: Reboot after VDA
+  win_reboot:
+  when: vda_install.rc == 3
+
+- name: Continue with VDA (2/2)
+  ansible.windows.win_package:
+    path: '{{ citrix_vda_path }}'
+    arguments: '{{ citrix_vda_arguments }}'
+    expected_return_code: [0, 3, 3010]
+  register: vda_install2
+  when: vda_install.rc == 3
+
+- name: Reboot after VDA
+  win_reboot:
+  when: vda_install2.changed

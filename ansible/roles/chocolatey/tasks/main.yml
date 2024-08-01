@@ -1,0 +1,28 @@
+- name: ensure .NET Framework 4.8 requirement is satisfied for Chocolatey CLI v2.0.0+
+  block:
+  - name: install Chocolatey CLI v1.4.0
+    win_chocolatey:
+      name: 'chocolatey'
+      state: present
+      version: '1.4.0'
+
+  - name: install Microsoft .NET Framework 4.8
+    win_chocolatey:
+      name: 'netfx-4.8'
+      state: present
+
+  - name: Reboot the host to complete .NET Framework 4.8 install
+    ansible.windows.win_reboot:
+
+  - name: install Chocolatey CLI v2.0.0+ when .NET Framework 4.8 dependency is met
+    win_chocolatey:
+      name: 'chocolatey'
+      state: latest
+  
+- name: install Microsoft .NET 2.0 for Adobe Dependancy
+  win_chocolatey:
+    name: 'dotnetcore'
+    state: present
+    choco_args:
+      - --ignore-checksums
+      - --version=2.0.0

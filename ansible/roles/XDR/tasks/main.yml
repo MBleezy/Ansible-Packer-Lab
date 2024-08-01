@@ -1,0 +1,17 @@
+# roles/XDR/tasks/main.yml
+---
+- name: Make sure extract directory exist
+  ansible.windows.win_file:
+    path: C:\temp\XDR
+    state: directory
+  
+- name: Download XDR MSI
+  ansible.windows.win_get_url:
+    url: '{{ XDR_path }}'
+    dest: C:\temp\XDR
+    
+- name: Coretex XDR
+  ansible.windows.win_package:
+    path: C:\temp\XDR\Moore_FreshInstall_Feb24_x64.msi
+    arguments: '{{ XDR_arguments }}'
+    state: present

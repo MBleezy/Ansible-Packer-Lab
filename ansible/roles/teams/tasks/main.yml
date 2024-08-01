@@ -1,0 +1,26 @@
+# tasks file for ansible-role-teams
+---
+#This task installs old teams as of writing.
+- name: Install Teams Machine Wide Installer
+  win_chocolatey:
+    name: microsoft-teams.install
+    state: present
+# - name: Make sure extract directory exist
+#   ansible.windows.win_file:
+#     path: C:\temp\teams
+#     state: directory
+
+# - name: Download Teams.msix
+#   ansible.windows.win_get_url:
+#     url: https://my.azure.blob.storage.net/cts-ansible/MSTeams-x64.msix
+#     dest: C:\temp\teams
+
+# - name: Download Teamsbootstrapper
+#   ansible.windows.win_get_url:
+#     url: https://my.azure.blob.storage.netnet/cts-ansible/teamsbootstrapper.exe
+#     dest: C:\temp\teams
+
+# - name: Install Teams
+#   ansible.windows.win_shell: C:\temp\teams\teamsbootstrapper.exe -p -o "c:\temp\teams\MSTeams-x64.msix"
+#   args:
+#     executable: cmd.exe

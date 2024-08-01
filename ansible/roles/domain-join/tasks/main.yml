@@ -1,0 +1,14 @@
+---
+- name: Join the Domain
+  ansible.windows.win_domain_membership:
+    dns_domain_name: "{{ domain_name }}"
+    hostname: "{{ hostname }}"
+    domain_admin_user: "{{ lookup('env', 'DOMAIN_USER') }}"
+    domain_admin_password: "{{ lookup('env', 'DOMAIN_PASS') }}"
+    domain_ou_path: "{{ domain_ou_path }}"
+    state: domain
+  register: domain_state
+
+- name: Reboot if necessary
+  ansible.windows.win_reboot:
+  when: domain_state.reboot_required

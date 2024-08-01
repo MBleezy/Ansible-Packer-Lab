@@ -1,0 +1,15 @@
+- name: Copy Crystal runtime 2.4
+  ansible.windows.win_copy:
+    src: '\\my.azure.blob.storage.net\installmedia\Crystal\CR13SP31MSI32_0-10010309.msi'
+    dest: C:\temp
+    remote_src: true
+  vars:
+    ansible_become: yes
+    ansible_become_method: runas
+    ansible_become_user: "{{ ansible_user }}"
+    ansible_become_pass: "{{ ansible_password }}"
+
+- name: Install Crystal runtime 2.4 omitting the product_id  
+  ansible.windows.win_package:    
+    path: 'C:\temp\CR13SP31MSI32_0-10010309.msi'
+    state: present

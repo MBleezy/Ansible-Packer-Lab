@@ -1,0 +1,45 @@
+---
+- name: Create Temp Folder
+  win_file:
+    path: 'C:\Temp'
+    state: directory
+    
+- name: Install FSlogix
+  win_chocolatey:
+    name: fslogix
+    state: present
+    choco_args:
+    - --ignore-checksums
+
+- name: Create FSLogix Registry File from Template
+  ansible.windows.win_template:
+    src: fslogix-profiles.reg.j2
+    dest: C:\Temp\FSLogix.reg
+  vars:
+    unc_path: "{{ FSLOGIX_SHARE_UNC }}"
+
+- name: Compare and Merge FSLogix Registry File
+  community.windows.win_regmerge:
+    path: C:\Temp\FSlogix.reg
+    compare_to:
+      - HKEY_LOCAL_MACHINE\SOFTWARE\FSLogix\Apps
+      - HKEY_LOCAL_MACHINE\SOFTWARE\FSLogix\Profile
+      - HKEY_LOCAL_MACHINE\SOFTWARE\Policies\FSLogix\ODFC
+
+- name: Add VHDLocations
+  ansible.windows.win_regedit:
+    path: HKLM:\SOFTWARE\FSLogix\Profiles
+    name: VHDLocations
+    data: ["{{ unc_path }}"]
+    type: multistring
+  vars:
+    unc_path: "{{ FSLOGIX_SHARE_UNC }}"
+
+#- name: Add redirections.xml location
+#  ansible.windows.win_regedit:
+#    path: HKLM:\SOFTWARE\FSLogix\Profiles
+#    name: RedirXMLSourceFolder
+#    data: ["{{ unc_path }}"]
+#    type: mstring
+#  vars:
+#    unc_path: "{{ FSLOGIX_SHARE_UNC }}"
