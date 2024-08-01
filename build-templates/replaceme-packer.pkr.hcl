@@ -33,7 +33,7 @@ variable "tenant_id" {
 
 variable "github_source" {
   type    = string
-  default = "jwdm99/jdm-pkr-template"
+  default = "MBleezy/Ansible-Packer-Lab"
 }
 
 variable "git_commit_sha" {
@@ -94,7 +94,7 @@ source "azure-arm" "packer" {
 
   virtual_network_name                   = "github-runner-vnet"
   virtual_network_subnet_name            = "default"
-  virtual_network_resource_group_name    = "packer"
+  virtual_network_resource_group_name    = "mbleezarde-sandbox"
 
   # Skip image creation for PR check
   skip_create_image = var.skip_create_image
