@@ -103,7 +103,7 @@ source "azure-arm" "packer" {
     gallery_name        = "mb_gallery"
     image_name          = "W10_AVD"
     replication_regions = ["eastus"]
-    resource_group      = "packer"
+    resource_group      = "mbleezarde-sandbox"
     image_version       = var.image_version
     specialized         = false
   }
